@@ -1,6 +1,6 @@
 from celery import Task
 from newsfilter import celery_app
-from newsfeed.models import ( 
+from newsfeed.models import (
     User
 )
 from newsfeed.services import SendEmailService

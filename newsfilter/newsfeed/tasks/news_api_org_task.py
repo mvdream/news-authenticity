@@ -1,7 +1,6 @@
 from newsfilter import celery_app
 from newsfeed.services.new_api_org import NewApiOrgData
 from celery import Task
-from datetime import timedelta
 from celery.schedules import crontab
 
 

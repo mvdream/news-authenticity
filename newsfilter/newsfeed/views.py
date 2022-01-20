@@ -1,9 +1,8 @@
+import json
 from django.views.generic import TemplateView, ListView
 from django.views import View
-from newsfeed.models import NewsData
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-import json
+from newsfeed.models import NewsData
 
 
 class HomePageView(TemplateView):
