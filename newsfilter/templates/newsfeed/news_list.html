@@ -1,0 +1,84 @@
+{% extends 'newsfeed/base.html' %}
+{% load static %}
+
+{% block container %}
+{% csrf_token %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12 offset-lg-2">
+            <div class="infinite-container">
+                {% for news in news_list %}
+                <div class="infinite-item">
+                    <div class="col-sm-12">
+
+                        <h3>
+                            <a href="{{news.url}}" target="_blank" style="color: black;">{{news.title}}</a>
+                        </h3>
+                        <div class="col-sm-9">
+                            <p>{{news.content}}</p>
+                            <a href="{{news.url}}" target="_blank">Read more</a>
+                        </div>
+                        <div class="col-sm-3">
+                            <button class="btn btn-primary" onclick="changeVoteCount(1, {{news.id}}, '{% url 'news:change-vote-count' %}')">Vote up</button>
+                            <button class="btn btn-warning" style="color:black"
+                                onclick="changeVoteCount(0, {{news.id}}, '{% url 'news:change-vote-count' %}')">Vote down</button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="col-sm-6" style="margin-top: 20px;margin-bottom: 20px;">
+                    {% if page_obj.has_previous %}
+                    <a class="infinite-more-link btn btn-primary"
+                        href="?page={{ page_obj.previous_page_number }}">Previous page</a>
+                    {% endif %}
+
+                    {% if page_obj.has_next %}
+                    <a class="infinite-more-link btn btn-primary" href="?page={{ page_obj.next_page_number }}">More</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascript %}
+<!-- <script type="text/javascript">
+    let csrftoken = $("[name=csrfmiddlewaretoken]").val();
+
+    $.ajaxSetup({
+        beforeSend: function (xhr, settings) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    });
+
+    $(document).ready(function () {
+        // var infinite = new Waypoint.Infinite({
+        //     element: $('.infinite-container')[0],
+        //     offset: function() {
+        //         return -this.element.clientHeight
+        //     }
+        // });
+
+    });
+    function changeVoteCount(votyType, newsId) {
+        $.ajax({
+            url: "{% url 'news:change-vote-count' %}",
+            type: "PUT",
+            contentType: 'application/json',
+            data: JSON.stringify({
+                'voteType': votyType,
+                'newsId': newsId,
+            }),
+            dataType: 'json',
+            success: function (data) {
+                alert("Thanks for Vote")
+            }
+        });
+    }
+</script> -->
+<script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+<script src="{% static 'js/infinite.min.js' %}"></script>
+<script src="{% static 'js/changeVote.js' %}"></script>
+{% endblock %}
