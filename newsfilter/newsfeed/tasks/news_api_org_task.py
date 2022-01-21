@@ -1,3 +1,4 @@
+import logging
 from newsfilter import celery_app
 from newsfeed.services.new_api_org import NewApiOrgData
 from celery import Task
@@ -12,6 +13,7 @@ celery_app.conf.beat_schedule.update(
         }
     }
 )
+logger = logging.getLogger("newsfilter")
 
 
 class NewsApiOrgTask(Task):
@@ -24,7 +26,13 @@ class NewsApiOrgTask(Task):
             obj.fetch_api_data()
             obj.save_data_to_database()
         except Exception as e:
-            print("Exception in shcedule reminder send mail task", str(e))
+            logger.error(
+                dict(
+                    message="Exception in shcedule reminder send mail task",
+                    class_name="NewsApiOrgTask",
+                    errors=e,
+                )
+            )
 
 
 news_api_org_task = celery_app.register_task(NewsApiOrgTask())

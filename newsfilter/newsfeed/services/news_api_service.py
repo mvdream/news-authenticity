@@ -1,5 +1,8 @@
+import logging
 from abc import ABC, abstractmethod
 from newsfeed.models import NewsData, Category
+
+logger = logging.getLogger("newsfilter")
 
 
 class ApiUtility(ABC):
@@ -27,4 +30,11 @@ class ApiUtility(ABC):
                 ]
                 NewsData.objects.bulk_create(newsfeeds)
         except Exception as e:
-            print("Exception to save_data_to_database : ", str(e))
+            logger.error(
+                dict(
+                    message="Exception to save data to database",
+                    class_name="ApiUtility",
+                    method_name="save_data_to_database",
+                    errors=e,
+                )
+            )

@@ -19,9 +19,9 @@
                             <a href="{{news.url}}" target="_blank">Read more</a>
                         </div>
                         <div class="col-sm-3">
-                            <button class="btn btn-primary" onclick="changeVoteCount(1, {{news.id}})">Vote up</button>
+                            <button class="btn btn-primary" onclick="changeVoteCount(1, {{news.id}}, '{% url 'news:change-vote-count' %}')">Vote up</button>
                             <button class="btn btn-warning" style="color:black"
-                                onclick="changeVoteCount(0, {{news.id}})">Vote down</button>
+                                onclick="changeVoteCount(0, {{news.id}}, '{% url 'news:change-vote-count' %}')">Vote down</button>
                         </div>
                     </div>
                     {% endfor %}
@@ -44,7 +44,7 @@
 {% endblock %}
 
 {% block javascript %}
-<script type="text/javascript">
+<!-- <script type="text/javascript">
     let csrftoken = $("[name=csrfmiddlewaretoken]").val();
 
     $.ajaxSetup({
@@ -77,7 +77,8 @@
             }
         });
     }
-</script>
+</script> -->
 <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
 <script src="{% static 'js/infinite.min.js' %}"></script>
+<script src="{% static 'js/changeVote.js' %}"></script>
 {% endblock %}

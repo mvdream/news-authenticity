@@ -144,3 +144,32 @@ STATICFILES_DIRS = (
 )
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+LOGS_PATH = f"{BASE_DIR}/.logs/logfile.log"
+os.makedirs(f"{BASE_DIR}/.logs/", exist_ok=True)
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": True,
+    "formatters": {"json": {"()": "pythonjsonlogger.jsonlogger.JsonFormatter"}},
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "json",
+        },
+        "logfile": {
+            "level": "DEBUG",
+            "class": "logging.handlers.RotatingFileHandler",
+            "maxBytes": 52428800,
+            "backupCount": 2,
+            "filename": LOGS_PATH,
+            "formatter": "json",
+        },
+    },
+    "loggers": {
+        "newsfilter": {
+            "handlers": ["console", "logfile"],
+            "level": "INFO",
+            "propagate": False,
+        }
+    },
+}

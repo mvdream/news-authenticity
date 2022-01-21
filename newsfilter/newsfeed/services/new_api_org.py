@@ -1,9 +1,12 @@
+import logging
 import requests
 from datetime import datetime
 from newsfeed.services.news_api_service import ApiUtility
 from newsfeed.constants import NewsApiConstants
 from newsfeed.models import Category
 from newsfeed.tasks.send_notification_task import send_notification_email
+
+logger = logging.getLogger("newsfilter")
 
 
 class NewApiOrgData(ApiUtility):
@@ -31,8 +34,20 @@ class NewApiOrgData(ApiUtility):
                     if articles:
                         send_notification_email.delay(category)
                 else:
-                    print("Error response for url : {}, category : {}, response : {}".format(
-                        url, category, json_resp))
+                    logger.info(
+                        dict(
+                            message=f"Error response for url : {url}, category : {category}, response : {json_resp}",
+                            class_name="NewApiOrgData",
+                            method_name="fetch_api_data",
+                        )
+                    )
 
         except Exception as e:
-            print("Exception in NewsAPIOrgData method", str(e))
+            logger.error(
+                dict(
+                    message="Exception in NewsAPIOrgData method",
+                    class_name="NewApiOrgData",
+                    method_name="fetch_api_data",
+                    errors=e,
+                )
+            )

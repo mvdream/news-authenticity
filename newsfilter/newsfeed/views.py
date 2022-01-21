@@ -1,8 +1,12 @@
 import json
+import logging
 from django.views.generic import TemplateView, ListView
 from django.views import View
 from django.http import JsonResponse
 from newsfeed.models import NewsData
+from http import HTTPStatus
+
+logger = logging.getLogger("newsfilter")
 
 
 class HomePageView(TemplateView):
@@ -32,6 +36,21 @@ class ChangeVoteCount(View):
                     news_obj.positive_votes += 1
                 news_obj.save()
                 resp = {'success': 'vote done.'}
-            return JsonResponse(resp, status=200)
+                logger.info(
+                    dict(
+                        message="Vote done",
+                        class_name="ChangeVoteCount",
+                        method_name="post",
+                    )
+                )
+            return JsonResponse(resp, status=HTTPStatus.OK)
         except Exception as e:
-            print('Exception in add comment view', str(e))
+            logger.error(
+                dict(
+                    message="'Exception in change vote'",
+                    class_name="ChangeVoteCount",
+                    method_name="post",
+                    errors=e,
+                )
+            )
+            return JsonResponse({"message": "failed"}, status=HTTPStatus.INTERNAL_SERVER_ERROR)
